@@ -33,6 +33,7 @@ type ToolbarButton =
     | 'quote'
     | 'unordered-list'
     | 'ordered-list'
+    | 'check-list'
     | 'link'
     | 'image'
     | 'upload-image'
@@ -277,6 +278,7 @@ declare class EasyMDE {
     static toggleBlockquote: (editor: EasyMDE) => void;
     static toggleUnorderedList: (editor: EasyMDE) => void;
     static toggleOrderedList: (editor: EasyMDE) => void;
+    static toggleCheckList: (editor: EasyMDE) => void;
     static cleanBlock: (editor: EasyMDE) => void;
     static drawLink: (editor: EasyMDE) => void;
     static drawImage: (editor: EasyMDE) => void;
