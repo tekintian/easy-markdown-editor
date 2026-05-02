@@ -48,14 +48,10 @@ describe('List toggle (default unordered bullet *)', () => {
             expectValue('foo');
         });
 
-        // Master quirk: the issue #92 strip leaves a leading space, then `_toggle`
-        // re-prepends "* " producing a double space. Locked in verbatim — the PR
-        // explicitly tries to fix this; the test will fail if/when it does, prompting
-        // a deliberate decision rather than a silent change.
-        it('"1. foo" + unordered → "*  foo" (issue #92 path, double space)', () => {
+        it('"1. foo" + unordered → "* foo"', () => {
             seed('1. foo');
             cy.get('button.unordered-list').click();
-            expectValue('*  foo');
+            expectValue('* foo');
         });
 
         it('"* foo" + ordered → "1. foo"', () => {
@@ -66,14 +62,14 @@ describe('List toggle (default unordered bullet *)', () => {
 
         // Bold + ordered list — exercises the path where `getState` returns multiple
         // keys (bold + ordered-list). Cursor placed inside the bold content so both
-        // are detected. Output captured from master verbatim.
-        it('"1. **foo**" + unordered → "*  **foo**" (bold + #92 path, double space)', () => {
+        // are detected.
+        it('"1. **foo**" + unordered → "* **foo**" (bold + ordered)', () => {
             cy.window().then((win) => {
                 win.easyMDE.value('1. **foo**');
                 win.easyMDE.codemirror.setCursor({ line: 0, ch: 6 });
             });
             cy.get('button.unordered-list').click();
-            expectValue('*  **foo**');
+            expectValue('* **foo**');
         });
 
         // Master quirk: indent is NOT preserved — "* " is prepended in front, leaving
@@ -100,12 +96,11 @@ describe('List toggle (default unordered bullet *)', () => {
             expectValue('1. a\n2. b\n3. c');
         });
 
-        // Master quirk: same double-space as the single-line #92 case, repeated per line.
-        it('ordered → unordered swaps markers (double-space quirk per line)', () => {
+        it('ordered → unordered swaps markers', () => {
             seed('1. a\n2. b\n3. c');
             selectAll();
             cy.get('button.unordered-list').click();
-            expectValue('*  a\n*  b\n*  c');
+            expectValue('* a\n* b\n* c');
         });
 
         it('unordered → ordered renumbers', () => {
@@ -113,6 +108,92 @@ describe('List toggle (default unordered bullet *)', () => {
             selectAll();
             cy.get('button.ordered-list').click();
             expectValue('1. a\n2. b\n3. c');
+        });
+    });
+});
+
+describe('Check-list toggle', () => {
+    beforeEach(() => {
+        cy.visit(__dirname + '/index.html');
+    });
+
+    describe('single line', () => {
+        it('plain line + check-list → "- [ ] foo"', () => {
+            seed('foo');
+            cy.get('button.check-list').click();
+            expectValue('- [ ] foo');
+        });
+
+        it('"- [ ] foo" + check-list toggles off → "foo"', () => {
+            seed('- [ ] foo');
+            cy.get('button.check-list').click();
+            expectValue('foo');
+        });
+
+        it('"- [x] foo" + check-list toggles off → "foo" (checked variant)', () => {
+            seed('- [x] foo');
+            cy.get('button.check-list').click();
+            expectValue('foo');
+        });
+
+        it('"- [X] foo" + check-list toggles off → "foo" (uppercase X variant)', () => {
+            seed('- [X] foo');
+            cy.get('button.check-list').click();
+            expectValue('foo');
+        });
+
+        it('"* foo" + check-list → "- [ ] foo"', () => {
+            seed('* foo');
+            cy.get('button.check-list').click();
+            expectValue('- [ ] foo');
+        });
+
+        it('"1. foo" + check-list → "- [ ] foo"', () => {
+            seed('1. foo');
+            cy.get('button.check-list').click();
+            expectValue('- [ ] foo');
+        });
+
+        it('"- [ ] foo" + unordered → "* foo"', () => {
+            seed('- [ ] foo');
+            cy.get('button.unordered-list').click();
+            expectValue('* foo');
+        });
+
+        it('"- [ ] foo" + ordered → "1. foo"', () => {
+            seed('- [ ] foo');
+            cy.get('button.ordered-list').click();
+            expectValue('1. foo');
+        });
+    });
+
+    describe('multi-line (3 lines, select all)', () => {
+        it('plain → check-list prefixes each line', () => {
+            seed('a\nb\nc');
+            selectAll();
+            cy.get('button.check-list').click();
+            expectValue('- [ ] a\n- [ ] b\n- [ ] c');
+        });
+
+        it('unordered → check-list swaps markers', () => {
+            seed('* a\n* b\n* c');
+            selectAll();
+            cy.get('button.check-list').click();
+            expectValue('- [ ] a\n- [ ] b\n- [ ] c');
+        });
+
+        it('ordered → check-list swaps markers', () => {
+            seed('1. a\n2. b\n3. c');
+            selectAll();
+            cy.get('button.check-list').click();
+            expectValue('- [ ] a\n- [ ] b\n- [ ] c');
+        });
+
+        it('check-list → unordered swaps markers', () => {
+            seed('- [ ] a\n- [ ] b\n- [ ] c');
+            selectAll();
+            cy.get('button.unordered-list').click();
+            expectValue('* a\n* b\n* c');
         });
     });
 });

@@ -1234,6 +1234,16 @@ function _toggleLine(cm, name, liststyle) {
     var line = 1;
     var listTypes = ['unordered-list', 'ordered-list', 'check-list'];
     var currentType = Object.keys(stat)[0];
+    // After selectAll the cursor's start sits at column 0, where getTokenAt
+    // yields no type — stat comes back empty and currentType is undefined,
+    // making the swap branch below unreachable. Fall back to detecting the
+    // type from the first selected line's text.
+    if (!listTypes.includes(currentType)) {
+        var firstLineText = cm.getLine(startPoint.line);
+        if (/^\s*- \[[ xX]]\s/.test(firstLineText)) currentType = 'check-list';
+        else if (/^\s*\d+\.\s/.test(firstLineText)) currentType = 'ordered-list';
+        else if (/^\s*[*\-+]\s/.test(firstLineText)) currentType = 'unordered-list';
+    }
     for (var i = startPoint.line; i <= endPoint.line; i++) {
         (function (i) {
             var text = cm.getLine(i);
