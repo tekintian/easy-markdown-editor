@@ -64,6 +64,18 @@ describe('List toggle (default unordered bullet *)', () => {
             expectValue('1. foo');
         });
 
+        // Bold + ordered list — exercises the path where `getState` returns multiple
+        // keys (bold + ordered-list). Cursor placed inside the bold content so both
+        // are detected. Output captured from master verbatim.
+        it('"1. **foo**" + unordered → "*  **foo**" (bold + #92 path, double space)', () => {
+            cy.window().then((win) => {
+                win.easyMDE.value('1. **foo**');
+                win.easyMDE.codemirror.setCursor({ line: 0, ch: 6 });
+            });
+            cy.get('button.unordered-list').click();
+            expectValue('*  **foo**');
+        });
+
         // Master quirk: indent is NOT preserved — "* " is prepended in front, leaving
         // the original whitespace after the marker. Locked in as-is.
         it('indented plain line + unordered → "*     foo" (indent moves after marker)', () => {
