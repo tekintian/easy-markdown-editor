@@ -42,7 +42,10 @@
         "vinyl-buffer": "^1.0.1",
         "vinyl-source-stream": "^2.0.0"
     },
-    "repository": "github:Ionaru/easy-markdown-editor",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/Ionaru/easy-markdown-editor.git"
+    },
     "scripts": {
         "prepare": "gulp",
         "test": "npm run lint && npm run test:types && npm run e2e",
