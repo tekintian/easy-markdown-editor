@@ -1208,7 +1208,7 @@ function _toggleLine(cm, name, liststyle) {
     var _checkChar = function (name, char) {
         var map = {
             'quote': '>',
-            'unordered-list': '\\' + liststyle + '\\s(?!!\\[[ xX]])',
+            'unordered-list': '\\' + liststyle,
             'ordered-list': '\\d+.',
             'check-list': '- \\[[ xX]]',
         };
