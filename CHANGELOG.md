@@ -4,7 +4,8 @@ All notable changes to EasyMDE will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+<!-- ## [Unreleased] -->
+## [2.21.0] - 2026-05-03
 ### Added
 - Check-list toolbar button and the ability to switch between unordered, ordered, and check-list types (Thanks to [@steve3ussr], [#631]).
 
@@ -455,7 +456,8 @@ Project forked from [SimpleMDE](https://github.com/sparksuite/simplemde-markdown
 [@steve3ussr]: https://github.com/steve3ussr
 
 <!-- Linked versions -->
-[Unreleased]: https://github.com/Ionaru/easy-markdown-editor/compare/2.20.0...HEAD
+[Unreleased]: https://github.com/Ionaru/easy-markdown-editor/compare/2.21.0...HEAD
+[2.21.0]: https://github.com/Ionaru/easy-markdown-editor/compare/2.20.0...2.21.0
 [2.20.0]: https://github.com/Ionaru/easy-markdown-editor/compare/2.19.0...2.20.0
 [2.19.0]: https://github.com/Ionaru/easy-markdown-editor/compare/2.18.0...2.19.0
 [2.18.0]: https://github.com/Ionaru/easy-markdown-editor/compare/2.17.0...2.18.0
