@@ -30,6 +30,7 @@ var bindings = {
     'toggleBlockquote': toggleBlockquote,
     'toggleOrderedList': toggleOrderedList,
     'toggleUnorderedList': toggleUnorderedList,
+    'toggleCheckList': toggleCheckList,
     'toggleCodeBlock': toggleCodeBlock,
     'togglePreview': togglePreview,
     'toggleStrikethrough': toggleStrikethrough,
@@ -323,6 +324,8 @@ function getState(cm, pos) {
             text = cm.getLine(pos.line);
             if (/^\s*\d+\.\s/.test(text)) {
                 ret['ordered-list'] = true;
+            } else if (/^\s*- \[[ xX]]\s/.test(text)) {
+                ret['check-list'] = true;
             } else {
                 ret['unordered-list'] = true;
             }
@@ -811,6 +814,10 @@ function toggleOrderedList(editor) {
     _toggleLine(editor.codemirror, 'ordered-list');
 }
 
+function toggleCheckList(editor) {
+    _toggleLine(editor.codemirror, 'check-list');
+}
+
 /**
  * Action for clean block (remove headline, list, blockquote code, markers)
  */
@@ -1184,6 +1191,7 @@ function _toggleLine(cm, name, liststyle) {
         'quote': /^(\s*)>\s+/,
         'unordered-list': listRegexp,
         'ordered-list': listRegexp,
+        'check-list': /^(\s*)(- \[[ xX]])(\s+)/,
     };
 
     var _getChar = function (name, i) {
@@ -1191,6 +1199,7 @@ function _toggleLine(cm, name, liststyle) {
             'quote': '>',
             'unordered-list': liststyle,
             'ordered-list': '%%i.',
+            'check-list': '- [ ]',
         };
 
         return map[name].replace('%%i', i);
@@ -1201,6 +1210,7 @@ function _toggleLine(cm, name, liststyle) {
             'quote': '>',
             'unordered-list': '\\' + liststyle,
             'ordered-list': '\\d+.',
+            'check-list': '- \\[[ xX]]',
         };
         var rt = new RegExp(map[name]);
 
@@ -1222,18 +1232,28 @@ function _toggleLine(cm, name, liststyle) {
     };
 
     var line = 1;
+    var listTypes = ['unordered-list', 'ordered-list', 'check-list'];
+    var currentType = Object.keys(stat)[0];
+    // After selectAll the cursor's start sits at column 0, where getTokenAt
+    // yields no type — stat comes back empty and currentType is undefined,
+    // making the swap branch below unreachable. Fall back to detecting the
+    // type from the first selected line's text.
+    if (!listTypes.includes(currentType)) {
+        var firstLineText = cm.getLine(startPoint.line);
+        if (/^\s*- \[[ xX]]\s/.test(firstLineText)) currentType = 'check-list';
+        else if (/^\s*\d+\.\s/.test(firstLineText)) currentType = 'ordered-list';
+        else if (/^\s*[*\-+]\s/.test(firstLineText)) currentType = 'unordered-list';
+    }
     for (var i = startPoint.line; i <= endPoint.line; i++) {
         (function (i) {
             var text = cm.getLine(i);
             if (stat[name]) {
                 text = text.replace(repl[name], '$1');
+            } else if ( listTypes.includes(currentType) && listTypes.includes(name) ) {
+                text = text.replace(repl[currentType], '$1');
+                text = _toggle(name, text, false);
+                line += 1;
             } else {
-                // If we're toggling unordered-list formatting, check if the current line
-                // is part of an ordered-list, and if so, untoggle that first.
-                // Workaround for https://github.com/Ionaru/easy-markdown-editor/issues/92
-                if (name == 'unordered-list') {
-                    text = _toggle('ordered-list', text, true);
-                }
                 text = _toggle(name, text, false);
                 line += 1;
             }
@@ -1472,6 +1492,7 @@ var iconClassMap = {
     'quote': 'fa fa-quote-left',
     'ordered-list': 'fa fa-list-ol',
     'unordered-list': 'fa fa-list-ul',
+    'check-list': 'fa fa-check-square-o',
     'clean-block': 'fa fa-eraser',
     'link': 'fa fa-link',
     'image': 'fa fa-image',
@@ -1572,6 +1593,13 @@ var toolbarBuiltInButtons = {
         action: toggleOrderedList,
         className: iconClassMap['ordered-list'],
         title: 'Numbered List',
+        default: true,
+    },
+    'check-list': {
+        name: 'check-list',
+        action: toggleCheckList,
+        className: iconClassMap['check-list'],
+        title: 'Check List',
         default: true,
     },
     'clean-block': {
@@ -2897,6 +2925,7 @@ EasyMDE.toggleHeading6 = toggleHeading6;
 EasyMDE.toggleCodeBlock = toggleCodeBlock;
 EasyMDE.toggleUnorderedList = toggleUnorderedList;
 EasyMDE.toggleOrderedList = toggleOrderedList;
+EasyMDE.toggleCheckList = toggleCheckList;
 EasyMDE.cleanBlock = cleanBlock;
 EasyMDE.drawLink = drawLink;
 EasyMDE.drawImage = drawImage;
@@ -2956,6 +2985,9 @@ EasyMDE.prototype.toggleUnorderedList = function () {
 };
 EasyMDE.prototype.toggleOrderedList = function () {
     toggleOrderedList(this);
+};
+EasyMDE.prototype.toggleCheckList = function () {
+    toggleCheckList(this);
 };
 EasyMDE.prototype.cleanBlock = function () {
     cleanBlock(this);
