@@ -66,6 +66,7 @@ var shortcuts = {
     'toggleBlockquote': 'Cmd-\'',
     'toggleOrderedList': 'Cmd-Alt-L',
     'toggleUnorderedList': 'Cmd-L',
+    'toggleCheckList': 'Shift-Cmd-L',
     'toggleCodeBlock': 'Cmd-Alt-C',
     'togglePreview': 'Cmd-P',
     'toggleSideBySide': 'F9',

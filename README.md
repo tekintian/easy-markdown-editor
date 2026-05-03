@@ -339,6 +339,7 @@ code | toggleCodeBlock | Code<br>fa fa-code
 quote | toggleBlockquote | Quote<br>fa fa-quote-left
 unordered-list | toggleUnorderedList | Generic List<br>fa fa-list-ul
 ordered-list | toggleOrderedList | Numbered List<br>fa fa-list-ol
+check-list | toggleCheckList | Check List<br>fa fa-check-square-o
 clean-block | cleanBlock | Clean block<br>fa fa-eraser
 link | drawLink | Create Link<br>fa fa-link
 image | drawImage | Insert Image<br>fa fa-picture-o
@@ -454,6 +455,7 @@ Shortcut (Windows / Linux) | Shortcut (macOS) | Action
 <kbd>Ctrl</kbd>-<kbd>Alt</kbd>-<kbd>C</kbd> | <kbd>Cmd</kbd>-<kbd>Alt</kbd>-<kbd>C</kbd> | "toggleCodeBlock"
 <kbd>Ctrl</kbd>-<kbd>Alt</kbd>-<kbd>I</kbd> | <kbd>Cmd</kbd>-<kbd>Alt</kbd>-<kbd>I</kbd> | "drawImage"
 <kbd>Ctrl</kbd>-<kbd>Alt</kbd>-<kbd>L</kbd> | <kbd>Cmd</kbd>-<kbd>Alt</kbd>-<kbd>L</kbd> | "toggleOrderedList"
+<kbd>Shift</kbd>-<kbd>Ctrl</kbd>-<kbd>L</kbd> | <kbd>Shift</kbd>-<kbd>Cmd</kbd>-<kbd>L</kbd> | "toggleCheckList"
 <kbd>Shift</kbd>-<kbd>Ctrl</kbd>-<kbd>H</kbd> | <kbd>Shift</kbd>-<kbd>Cmd</kbd>-<kbd>H</kbd> | "toggleHeadingBigger"
 <kbd>F9</kbd> | <kbd>F9</kbd> | "toggleSideBySide"
 <kbd>F11</kbd> | <kbd>F11</kbd> | "toggleFullScreen"
